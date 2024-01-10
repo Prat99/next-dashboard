@@ -1,9 +1,11 @@
+'use client';
 import {
   UserGroupIcon,
   HomeIcon,
   DocumentDuplicateIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 // Map of links to display in the side navigation.
 // Depending on the size of the application, this would be stored in a database.
@@ -18,8 +20,27 @@ const links = [
 ];
 
 export default function NavLinks() {
+  const pathName = usePathname();
+
+  const createBredcrumbs = (path: string): Array<React.JSX.Element> => {
+    const paths = path?.split('/');
+    const pageNames = paths?.filter((p) => p) ?? [];
+    return pageNames?.map((name, i) => (
+      <>
+        <span
+          key={`${i}-${name}`}
+          className={i === pageNames?.length - 1 ? ' text-blue-600' : ''}
+        >
+          {name}
+        </span>
+        {i < pageNames?.length - 1 ? <span>{' > '}</span> : null}
+      </>
+    ));
+  };
+
   return (
     <>
+      <p>{createBredcrumbs(pathName)}</p>
       {links.map((link) => {
         const LinkIcon = link.icon;
         return (
